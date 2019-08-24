@@ -1,0 +1,2 @@
+include ':app', ':tts_wear'
+rootProject.name='TTS_test_2'
