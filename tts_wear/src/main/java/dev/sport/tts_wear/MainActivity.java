@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,9 @@ public class MainActivity extends WearableActivity {
     private Button listenButton;
     //private SpeechRecognizer recognizer;
     //private RecognitionListener lonk;
+    private boolean hasWords;
+    private Button speakButton;
+    TextToSpeech tts;
 
     private static final int SPEECH_REQUEST_CODE = 77;
 
@@ -30,10 +34,15 @@ public class MainActivity extends WearableActivity {
 
         mTextView = (TextView) findViewById(R.id.text);
         listenButton = (Button) findViewById(R.id.button_listen);
-
+        speakButton = (Button) findViewById(R.id.button_speak);
+        speakButton.setEnabled(false);
+        hasWords = false;
         // Enables Always-on
         setAmbientEnabled();
 
+        //this was me trying to get the speech recognizer to open in this activity
+        //instead of opening the google STT activity
+        //might be worth pursuing but IDK
         /*
         if (recognizer.isRecognitionAvailable(this)){
             mTextView.setText("Recognizer Ready");
@@ -48,13 +57,29 @@ public class MainActivity extends WearableActivity {
 
         listenButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //change background color
-                //change text of button
                 //listen
                 getSpeech();
 
             }
         });
+
+        speakButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String words = mTextView.getText().toString();
+                tts.speak(words, TextToSpeech.QUEUE_FLUSH, null, "potato");
+            }
+        });
+
+        tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int i) {
+                if(i != TextToSpeech.ERROR){
+                    tts.setLanguage(Locale.US);
+                }
+            }
+        });
+
     }
 
     public void getSpeech(){
@@ -77,9 +102,18 @@ public class MainActivity extends WearableActivity {
                 if (resultCode == RESULT_OK && data != null){
                     ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mTextView.setText(results.get(0));
+                    hasWords = true;
+                    speakButton.setEnabled(false);
                 }
                 break;
         }
+    }
+    public void onPause(){
+        if(tts !=null){
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onPause();
     }
 
 }
