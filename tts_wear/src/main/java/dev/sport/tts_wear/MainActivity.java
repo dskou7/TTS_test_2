@@ -24,6 +24,7 @@ public class MainActivity extends WearableActivity {
     private boolean hasWords;
     private Button speakButton;
     TextToSpeech tts;
+    int utteranceID;
 
     private static final int SPEECH_REQUEST_CODE = 77;
 
@@ -39,6 +40,7 @@ public class MainActivity extends WearableActivity {
         hasWords = false;
         // Enables Always-on
         setAmbientEnabled();
+        utteranceID = 1;
 
         //this was me trying to get the speech recognizer to open in this activity
         //instead of opening the google STT activity
@@ -67,7 +69,8 @@ public class MainActivity extends WearableActivity {
             @Override
             public void onClick(View view) {
                 String words = mTextView.getText().toString();
-                int result = tts.speak(words, TextToSpeech.QUEUE_FLUSH, null, "potato");
+                int result = tts.speak(words, TextToSpeech.QUEUE_FLUSH, null, String.valueOf(utteranceID));
+                utteranceID++;
                 if (result == TextToSpeech.ERROR){
                     mTextView.setText("TTS Error");
                 }
