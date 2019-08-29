@@ -85,6 +85,7 @@ public class MainActivity extends WearableActivity {
             public void onInit(int i) {
                 if(i != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.US);
+                    hasWords = true;
                 }
                 else{
                     mTextView.setText("TTS initilization error");
@@ -114,8 +115,9 @@ public class MainActivity extends WearableActivity {
                 if (resultCode == RESULT_OK && data != null){
                     ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mTextView.setText(results.get(0));
-                    hasWords = true;
-                    speakButton.setEnabled(true);
+                    if (hasWords){
+                        speakButton.setEnabled(true);
+                    }
                 }
                 break;
         }
