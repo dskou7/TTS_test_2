@@ -67,7 +67,13 @@ public class MainActivity extends WearableActivity {
             @Override
             public void onClick(View view) {
                 String words = mTextView.getText().toString();
-                tts.speak(words, TextToSpeech.QUEUE_FLUSH, null, "potato");
+                int result = tts.speak(words, TextToSpeech.QUEUE_FLUSH, null, "potato");
+                if (result == TextToSpeech.ERROR){
+                    mTextView.setText("TTS Error");
+                }
+                else {
+                    mTextView.setText("TTS sent successfully");
+                }
             }
         });
 
@@ -109,7 +115,7 @@ public class MainActivity extends WearableActivity {
         }
     }
     public void onPause(){
-        if(tts !=null){
+        if(tts != null){
             tts.stop();
             tts.shutdown();
         }
