@@ -115,7 +115,7 @@ public class MainActivity extends WearableActivity {
                     ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mTextView.setText(results.get(0));
                     hasWords = true;
-                    speakButton.setEnabled(false);
+                    speakButton.setEnabled(true);
                 }
                 break;
         }
