@@ -83,6 +83,9 @@ public class MainActivity extends WearableActivity {
                 if(i != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.US);
                 }
+                else{
+                    mTextView.setText("TTS initilization error");
+                }
             }
         });
 
