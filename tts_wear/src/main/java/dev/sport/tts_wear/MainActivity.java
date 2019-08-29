@@ -22,6 +22,7 @@ public class MainActivity extends WearableActivity {
     //private SpeechRecognizer recognizer;
     //private RecognitionListener lonk;
     private boolean hasWords;
+    private boolean ttsReady;
     private Button speakButton;
     TextToSpeech tts;
     int utteranceID;
@@ -38,6 +39,7 @@ public class MainActivity extends WearableActivity {
         speakButton = (Button) findViewById(R.id.button_speak);
         speakButton.setEnabled(false);
         hasWords = false;
+        ttsReady = false;
         // Enables Always-on
         setAmbientEnabled();
         utteranceID = 1;
@@ -85,7 +87,10 @@ public class MainActivity extends WearableActivity {
             public void onInit(int i) {
                 if(i != TextToSpeech.ERROR){
                     tts.setLanguage(Locale.US);
-                    hasWords = true;
+                    ttsReady = true;
+                    if (hasWords){
+                        speakButton.setEnabled(true);
+                    }
                 }
                 else{
                     mTextView.setText("TTS initilization error");
@@ -115,7 +120,8 @@ public class MainActivity extends WearableActivity {
                 if (resultCode == RESULT_OK && data != null){
                     ArrayList<String> results = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     mTextView.setText(results.get(0));
-                    if (hasWords){
+                    hasWords = true;
+                    if (ttsReady){
                         speakButton.setEnabled(true);
                     }
                 }
